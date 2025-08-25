@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+# Disallow admin interface
+Disallow: /admin
+# Dynamic sitemap is served by backend /sitemap.xml route (static file kept as fallback during deployment)
+Sitemap: https://powerdrivesolution.com.np/sitemap.xml

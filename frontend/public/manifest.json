@@ -1,0 +1,28 @@
+{
+  "name": "Power Drive Solution",
+  "short_name": "PDS",
+  "description": "Professional Automobile Oils and Lubricants - Your Drive, Our Support",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#06477f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["business", "automotive", "industrial"],
+  "lang": "en",
+  "scope": "/",
+  "id": "power-drive-solution"
+}
