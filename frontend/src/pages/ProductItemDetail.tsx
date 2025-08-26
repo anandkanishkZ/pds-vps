@@ -16,6 +16,29 @@ export default function ProductItemDetailPage(){
   if(error) return <div className="max-w-3xl mx-auto py-20 text-center text-rose-600">{error}</div>;
   if(!product) return <Navigate to="/products" replace />;
 
+  // Normalize packSizes ordering so frontend matches admin order.
+  // Preference: explicit `position` -> `createdAt` -> numeric `id` -> fallback to reversing array.
+  const orderedPackSizes = (() => {
+    const arr = product.packSizes ? [...product.packSizes] : [];
+    if (arr.length === 0) return arr;
+    const first = arr[0] as any;
+    // position
+    if (first && Object.prototype.hasOwnProperty.call(first, 'position')) {
+      return arr.sort((a: any, b: any) => (Number(a.position) || 0) - (Number(b.position) || 0));
+    }
+    // createdAt
+    if (first && Object.prototype.hasOwnProperty.call(first, 'createdAt')) {
+      return arr.sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    }
+    // numeric id
+    const areNumericIds = arr.every((x: any) => typeof x.id === 'number' || /^\d+$/.test(String(x.id)));
+    if (areNumericIds) {
+      return arr.sort((a: any, b: any) => Number(a.id) - Number(b.id));
+    }
+    // fallback: reverse (assume API returned newest-first)
+    return arr.slice().reverse();
+  })();
+
   return (
     <div className="pt-16">
       <SEO
@@ -90,11 +113,11 @@ export default function ProductItemDetailPage(){
                   </ul>
                 </div>
               )}
-              {product.packSizes && product.packSizes.length>0 && (
+      {product.packSizes && product.packSizes.length>0 && (
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2"><Boxes className="h-4 w-4 text-brand-600"/>Available Packs</h3>
                   <div className="flex flex-wrap gap-2">
-                    {product.packSizes.map(p=> <span key={p.id} className="px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 text-xs font-medium tracking-wide">{p.displayLabel}</span>)}
+                    {orderedPackSizes.map(p=> <span key={p.id} className="px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 text-xs font-medium tracking-wide">{p.displayLabel}</span>)}
                   </div>
                 </div>
               )}
