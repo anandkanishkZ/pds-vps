@@ -535,20 +535,24 @@ const ProductEditor: React.FC<ProductEditorProps> = ({
                         if (!pdfs.length) {
                           return <div className="text-xs text-slate-500">No PDF uploaded</div>;
                         }
+                        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
                         return (
                           <div className="space-y-4">
-                            {pdfs.map((pdf)=> (
-                              <div key={pdf.id} className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <a href={pdf.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm font-medium">
-                                    <FileText className="h-4 w-4" /> View PDF ({pdf.type})
-                                  </a>
+                            {pdfs.map((pdf) => {
+                              const pdfFullUrl = pdf.url.startsWith('http') ? pdf.url : `${apiBaseUrl}${pdf.url}`;
+                              return (
+                                <div key={pdf.id} className="space-y-2">
+                                  <div className="flex items-center justify-between">
+                                    <a href={pdfFullUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm font-medium">
+                                      <FileText className="h-4 w-4" /> View PDF ({pdf.type})
+                                    </a>
+                                  </div>
+                                  <div className="w-full h-80 border border-slate-200 dark:border-slate-700 rounded-md overflow-hidden bg-slate-50 dark:bg-slate-900">
+                                    <iframe title={`pdf-${pdf.id}`} src={pdfFullUrl} className="w-full h-full" />
+                                  </div>
                                 </div>
-                                <div className="w-full h-80 border border-slate-200 dark:border-slate-700 rounded-md overflow-hidden bg-slate-50 dark:bg-slate-900">
-                                  <iframe title={`pdf-${pdf.id}`} src={pdf.url} className="w-full h-full" />
-                                </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         );
                       })()}

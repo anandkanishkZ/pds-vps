@@ -114,9 +114,14 @@ export default function ProductItemDetailPage(){
                 <Link to="/contact" className="flex-1 inline-flex items-center justify-center bg-brand-600 text-white font-semibold tracking-wide text-sm px-8 py-3 rounded-md shadow hover:bg-brand-700 transition">Get Quote</Link>
                 {(() => {
                   const pdf = (product.media||[]).find(m => m.type === 'spec' || m.type === 'brochure' || m.type === 'msds');
-                  return pdf ? (
-                    <a href={pdf.url} target="_blank" rel="noopener noreferrer" className="flex-1 inline-flex items-center justify-center border border-gray-300 dark:border-white/20 text-gray-700 dark:text-white font-semibold tracking-wide text-sm px-8 py-3 rounded-md hover:bg-gray-50 dark:hover:bg-white/10 transition">View PDF</a>
-                  ) : null;
+                  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+                  if (pdf) {
+                    const pdfFullUrl = pdf.url.startsWith('http') ? pdf.url : `${backendUrl}${pdf.url}`;
+                    return (
+                      <a href={pdfFullUrl} target="_blank" rel="noopener noreferrer" className="flex-1 inline-flex items-center justify-center border border-gray-300 dark:border-white/20 text-gray-700 dark:text-white font-semibold tracking-wide text-sm px-8 py-3 rounded-md hover:bg-gray-50 dark:hover:bg-white/10 transition">View PDF</a>
+                    );
+                  }
+                  return null;
                 })()}
               </div>
             </div>
