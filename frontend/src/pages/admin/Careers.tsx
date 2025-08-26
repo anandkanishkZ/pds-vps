@@ -101,6 +101,8 @@ export default function AdminCareersPage() {
     'IT'
   ];
 
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
+
   useEffect(() => {
     loadData();
   }, [currentPage, statusFilter, departmentFilter, searchTerm]);
@@ -108,43 +110,43 @@ export default function AdminCareersPage() {
   const loadData = async () => {
     try {
       setLoading(true);
-      
+
       // Load stats
-      const statsResponse = await fetch('/api/careers/admin/stats', {
+      const statsResponse = await fetch(`${API_BASE}/api/careers/admin/stats`, {
         headers: {
           'Authorization': `Bearer ${auth.getToken()}`
         }
       });
-      
+
       if (statsResponse.ok) {
         const statsData = await statsResponse.json();
         setStats(statsData);
       }
-      
+
       // Load jobs
       const params = new URLSearchParams({
         page: currentPage.toString(),
         limit: '10'
       });
-      
+
       if (statusFilter !== 'all') {
         params.append('status', statusFilter);
       }
-      
+
       if (departmentFilter !== 'all') {
         params.append('department', departmentFilter);
       }
-      
+
       if (searchTerm) {
         params.append('search', searchTerm);
       }
-      
-      const jobsResponse = await fetch(`/api/careers/admin/jobs?${params}`, {
+
+      const jobsResponse = await fetch(`${API_BASE}/api/careers/admin/jobs?${params}`, {
         headers: {
           'Authorization': `Bearer ${auth.getToken()}`
         }
       });
-      
+
       if (jobsResponse.ok) {
         const jobsData = await jobsResponse.json();
         setJobs(jobsData.jobs);
@@ -166,13 +168,13 @@ export default function AdminCareersPage() {
     }
     
     try {
-      const response = await fetch(`/api/careers/admin/jobs/${jobId}`, {
+      const response = await fetch(`${API_BASE}/api/careers/admin/jobs/${jobId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${auth.getToken()}`
         }
       });
-      
+
       if (response.ok) {
         setJobs(jobs.filter(job => job.id !== jobId));
       } else {
@@ -186,7 +188,7 @@ export default function AdminCareersPage() {
 
   const toggleJobStatus = async (jobId: string, currentStatus: boolean) => {
     try {
-      const response = await fetch(`/api/careers/admin/jobs/${jobId}`, {
+      const response = await fetch(`${API_BASE}/api/careers/admin/jobs/${jobId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -194,7 +196,7 @@ export default function AdminCareersPage() {
         },
         body: JSON.stringify({ isActive: !currentStatus })
       });
-      
+
       if (response.ok) {
         const updatedJob = await response.json();
         setJobs(jobs.map(job => 

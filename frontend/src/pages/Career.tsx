@@ -51,6 +51,8 @@ const Career = () => {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const formRef = useRef<HTMLDivElement | null>(null);
 
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
+
   useEffect(() => {
     setIsAnimated(true);
     fetchJobs();
@@ -59,7 +61,7 @@ const Career = () => {
   const fetchJobs = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/careers/jobs');
+      const response = await fetch(`${API_BASE}/api/careers/jobs`);
       if (response.ok) {
         const data = await response.json();
         setJobListings(data.jobs || []);
@@ -145,7 +147,7 @@ const Career = () => {
       submitData.append('coverLetter', formData.coverLetter);
       if (formData.resumeFile) submitData.append('resume', formData.resumeFile);
 
-      const response = await fetch('/api/careers/apply', {
+      const response = await fetch(`${API_BASE}/api/careers/apply`, {
         method: 'POST',
         body: submitData,
       });
