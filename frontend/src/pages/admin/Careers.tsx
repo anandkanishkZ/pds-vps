@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import {
   Plus,
   Search,
-  Filter,
   Eye,
   Edit,
   Trash2,
@@ -14,10 +13,7 @@ import {
   TrendingUp,
   AlertCircle,
   CheckCircle,
-  XCircle,
-  Calendar,
   Briefcase,
-  Star,
 } from 'lucide-react';
 import { auth } from '../../lib/api';
 
